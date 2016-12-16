@@ -46,6 +46,25 @@ window.translation_list = {
   }
 };
 ```
+- for ajax, all the response, if it's json format, the data structure will be the same to below. some ajax load the static resource data, this situation does not need to apply this json format.
+```
+// has error, code is 2, check the error for information if necessary
+{
+  "code": 2,
+  "error": "error info"
+}
+// has warning, code is 1, check the warning for information if necessary, check data for data
+{
+  "code": 1,
+  "warning": ["warning info", ...],
+  "data": ...
+}
+// normal, code is 0, chekc data for data directly
+{
+  "code": 0,
+  "data": ...
+}
+```
 ## backend settings
 Now we request every backend developer to set the django evironment with a common `settings.py` file. Shown below.
 ```
