@@ -2,8 +2,52 @@
 ## template settings
 Because all projects will be required to use the same UI template, it does not need to code the related settings in the template files.
 If anyone has some special requirements for the AuthSystem or other components, contact Doo.
+- generally, all the template must start with `{% extends 'base.html' %}` to load the public UI frame.
+- if there is a cdn resource existing, never ever use the local one, otherwise, the project won't be allowed to be online.
+- the template `base.html` has three cdn js blocks `{% block cdnjs_head %}{% endblock %}`, `{% block cdnjs_middle %}{% endblock %}`, `{% block cdnjs_end %}{% endblock %}` and two local js blocks `{% block js_head %}{% endblock %}`, `{% block js_end %}{% endblock %}`, for preventing js code confilt.
+- the template `base.html` has three cdn css blocks `{% block cdncss_head %}{% endblock %}`, `{% block cdncss_middle %}{% endblock %}` and `{% block cdncss_end %}{% endblock %}` and two local css blocks `{% block css_head %}{% endblock %}`, `{% block css_end %}{% endblock %}`, for preventing overriding.
+- in the tempalte, visit the `request` variable for some common data. shown below.
+```
+request.account.id # None or str
+request.account.pk # None or str
+request.account.username # blank str or str
+request.account.is_active # False or True
+request.account.type_name # None or local or github or windows or linkedin or google-plus or qq or weibo or *-linked(* is tpa type)
+request.account.is_authenticated # False or True
+request.project_list # a list of all projects, item is dict, keys are short_name, icon_uri, logo_uri, uri, full_name_en, full_name_zh
+request.meta # a dict of current app, keys are short_name, icon_uri, logo_uri, uri, description_zh, description_en, full_name_zh, full_name_en, author, keywords
+request.current_app # structure and content are the same to request.meta
+request.login_url # str
+request.policy_uri # str
+request.terms_uri # str
+request.tech_email # str
+request.read_notify_uri # str
+request.new_notify_uri # str
+request.cngb # dict, keys are icon_uri, logo_uri, uri, full_name_zh, full_name_en
+request.dc # structure is the same to request.cngb
+```
+- in the js, visit the `window.lang` for language info, `zh-cn` for Chinese while `other` for all the other language. visit `window.alertFrame` for `set_alert(code)` to set new alert, for `alert_exists(code)` to check if the alert is already shown. all the translation text is stored in `window.translaion_list`. the `code` in methods from `window.alertFrame` is from the keys of `window.translation_list.alert`. 
+```
+window.translation_list = {
+  alert: {
+    auth_status_failed: {
+      external_class: 'alert-danger',
+      'zh-cn': '查询登陆状态失败，请刷新重试。',
+      'default': 'Resquest for authentication status failed, please refresh the page to retry.'
+    },
+    ...
+  },
+  text: {
+    read_status: {
+      'zh-cn': '已读',
+      'default': 'read'
+    },
+    ...
+  }
+};
+```
 ## backend settings
-Now we request every backend developer to set the django evironment with a common `settings.py` file. Shows below.
+Now we request every backend developer to set the django evironment with a common `settings.py` file. Shown below.
 ```
 # include /dc_utils as a package path.
 import sys
@@ -98,3 +142,4 @@ from common.settings import *
 from mail.settings import *
 from session.settings import *
 ```
+##
