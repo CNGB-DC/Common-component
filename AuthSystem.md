@@ -59,14 +59,14 @@ window.translation_list = {
   "warning": ["warning info", ...],
   "data": ...
 }
-// normal, code is 0, chekc data for data directly
+// normal, code is 0, check data for data directly
 {
   "code": 0,
   "data": ...
 }
 ```
 ## backend settings
-Now we request every backend developer to set the django evironment with a common `settings.py` file. Shown below.
+Now we require every backend developer to set the django evironment with a common `settings.py` file. Shown below.
 ```
 # include /dc_utils as a package path.
 import sys
@@ -161,4 +161,23 @@ from common.settings import *
 from mail.settings import *
 from session.settings import *
 ```
-##
+- generally, all the view function, which return responce loading tempalte file as page, must add the `request` object with key `request` to context.
+- generally, all the responces with json format must follow the structure below.
+```
+// has error, cannot response normally, code is 2, add error info in error key, no other keys 
+{
+  "code": 2,
+  "error": "error info"
+}
+// has warning, but can return the result with expect, code is 1, add warning info in warning key, data in data key, no other keys 
+{
+  "code": 1,
+  "warning": ["warning info", ...],
+  "data": ...
+}
+// normal, code is 0, add data in data key, no other keys
+{
+  "code": 0,
+  "data": ...
+}
+```
