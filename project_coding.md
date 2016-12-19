@@ -241,3 +241,28 @@ generally, all the responces with json format must follow the structure below.
   "data": ...
 }
 ```
+
+## normal coding
+all the coding:
+
+### javascript
+codes must be extracted from html and save as file, coding in html is not allowed. excluding special situation.
+
+all the js file must start with:
+```
+/*
+ * create date: 2016-12-09
+ * author: somebody
+ * last update: somebody at 2016-12-09
+ */
+```
+
+### css
+using `@import('/the/url/of/resource')` syntax is not allowed.
+
+all the url in css coding, except using django template tag, must use absolute path:
+```
+background: url(/absolute/path/to/resource);
+
+```
+
