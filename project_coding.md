@@ -256,11 +256,22 @@ all the js file must start with:
  * last update: somebody at 2016-12-09
  */
 ```
+if the js file is combined from several onter files, keep these information of each files.
 
 ### css
 using `@import('/the/url/of/resource')` syntax is not allowed.
 
 all the url in css coding, except using django template tag, must use absolute path, e.g. `background: url(/absolute/path/to/resource);`.
+
+### python
+all the functions, classes, etc., must add some requeired information. e.g. :
+```
+def somefunction():
+  // describe what is this doing for
+  // create date: 2016-12-09
+  // author: somebody
+  // last update: somebody at 2016-12-09
+```
 
 # AuthSystem usage
 ## frontend
