@@ -40,7 +40,7 @@ request.account.username # blank str or str
 request.account.is_active # False or True
 request.account.type_name # None or local or github or windows or linkedin or google-plus or qq or weibo or *-linked(* is tpa type)
 request.account.is_authenticated # False or True
-request.project_list # a list of all projects, item is dict, keys are short_name, icon_uri, logo_uri, uri, full_name_en, full_name_zh
+request.project_list # a list of all projects, contains two pages(list); item in page is dict, keys are short_name, icon_uri, logo_uri, uri, full_name_en, full_name_zh
 request.meta # a dict of current app, keys are short_name, icon_uri, logo_uri, uri, description_zh, description_en, full_name_zh, full_name_en, author, keywords
 request.current_app # structure and content are the same to request.meta
 request.login_url # str
@@ -260,9 +260,47 @@ all the js file must start with:
 ### css
 using `@import('/the/url/of/resource')` syntax is not allowed.
 
-all the url in css coding, except using django template tag, must use absolute path:
-```
-background: url(/absolute/path/to/resource);
+all the url in css coding, except using django template tag, must use absolute path, e.g. `background: url(/absolute/path/to/resource);`.
 
+# AuthSystem usage
+## frontend
+visit the object `{{ request.account }}` for account information, this object has attributes: `id`, `pk`, `username`, `is_active`, `is_authenticated` and `type_name`.
+## backend
+1. include the middlewares `session.middlewares.DCSessionMiddleware` and `account.middlewares.DCAuthenticationMiddleware` in the `MIDDLEWARE_CLASSES` of file `settings.py`, as shown above. `session.middlewares.DCSessionMiddleware` must be loaded before `account.middlewares.DCAuthenticationMiddleware`.
+2. import anything from `account` and `session` at the bottom of file `settings.py`, `from account.settings import *; from session.settings import *;`, as shown above.
+3. import the decorator in your views file, `from account.decorators import login_required`, and add the decorator `@login_required` before your view function.
+4. in the view function, visit the object `request.account` for account information, `request.account` has attributes: `id`, `pk`, `username`, `is_active`, `is_authenticated` and `type_name`.
+
+# Project list
+## usage
+for both frontend and backend, visit list `request.project_list` for all projects' information. this list contains two lists, both structures are the same:
+```
+[
+  {
+    'short_name': 'shortname', 
+    'icon_uri': '/path/to/standard/icon', 
+    'logo_uri': '/path/to/standard/logo', 
+    'uri': '/path/to/official/home/', 
+    'full_name_en': 'the english full name', 
+    'full_name_zh': 'the chinese full name',
+  },
+  ...
+]
 ```
 
+## manage
+visit the site '/auth/admin/dc_project/app/' to manage the project info. please note, this is necessary to add the project information to use the public UI frame, the AuthSystem and the notification system.
+
+# notification system
+This system can only use in the LAN.
+visit the API '/auth/notify/set_new_notification/' in the LAN using `POST` method to add new notification. post data is:
+```
+{
+  'account': '', // account pk, required.
+  'account_type': '', // account type name, required.
+  'title_en': '', // title in english
+  'title_zh': '', // title in chinese. note, if one of the titles is blank, the blank one will be set the same to the other one. if both are blank, request refused.
+  'content_en': '', // content in english
+  'content_zh': '', // content in chinese. note, if one of the contents is blank, the blank one will be set the same to the other one. if both are blank, request refused.
+}
+```
