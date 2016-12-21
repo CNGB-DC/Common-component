@@ -61,6 +61,8 @@ request.global_search.query # str, global search query, only available when sett
 ### javascript variable
 visit the `window.lang` for language info, `zh-cn` for Chinese while `other` for all the other languages. 
 
+visit the `window.appg` for the code name of the project. 
+
 all the translation texts are stored in `window.translaion_list`.  
 ```
 window.translation_list = {
